@@ -5,15 +5,25 @@ const db = knex(knexConfig.development);
 
 module.exports = {
     getRecipes,
-  addRecipe,
+    addRecipe,
+//   getRecipeById,
   update,
   remove,
 };
 
 function getRecipes() {
-  return db('recipes');
+    return db('recipes').join('dishes', 'dishes.id', '=', 'recipes.dish_id').select({ dish: 'dishes.dish' },
+    'recipes.id', 'recipes.recipe', 'recipes.directions');
 }
 
+// function getRecipeById(id) {
+//     return db('recipes')
+      
+//       .join('dishes', 'recipes.id', '=', 'dishes.dish_id')
+//       .select({ dish: 'dishes.dish' },
+//       'recipes.id', 'recipes.recipe', 'recipes.directions').where({'dishes.dish_id': id })
+    
+// };
 
 
 async function addRecipe(recipe) {

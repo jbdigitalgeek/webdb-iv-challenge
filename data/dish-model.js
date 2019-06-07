@@ -12,17 +12,19 @@ module.exports = {
 };
 
 function getDishes() {
-  return db('dishes');
+  return db('dishes')
 }
 
 function getDishById(id) {
     return db('dishes')
-      .where({ id })
-      .first();
+        .join('recipes', 'dishes.id', '=', 'recipes.dish_id')
+        .select('dishes.id', 'dishes.dish', { recipe : 'recipes.recipe'})
+      .where({ 'dishes.id': id })
+        
   }
 
-async function addDish(recipe) {
-  const [id] = await db('dishes').insert(recipe);
+function addDish(dish) {
+  return db('dishes').insert(dish, 'id').then(([id])=>{return getDishById(id)});
 }
 
 function update(id, changes) {
